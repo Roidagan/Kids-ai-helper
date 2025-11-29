@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Explorers – Learn AI for Kids</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      transition: background 0.3s, color 0.3s;
+      background-color: #f4f4f4; color: #333;
+    }
+    .dark-mode { background-color: #1e1e1e; color: white; }
+    header {
+      background-color: #6200ea; color: white;
+      padding: 20px; text-align: center;
+      animation: fadeIn 1s;
+    }
+    nav { background-color: #3700b3; padding: 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    .container { padding: 20px; max-width: 1000px; margin: auto; }
+    .card {
+      background: white; padding: 20px; margin: 15px 0;
+      border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: transform .3s;
+    }
+    .dark-mode .card { background-color: #2e2e2e; }
+    .card:hover { transform: scale(1.01); }
+    button {
+      background-color: #6200ea; color: white;
+      border: none; padding: 10px 15px; border-radius: 5px;
+      cursor: pointer; margin-top: 10px;
+    }
+    button:hover { background-color: #3700b3; }
+    textarea, input {
+      width: 100%; padding: 10px; margin-top: 5px;
+      border-radius: 5px; border: 1px solid #ccc;
+    }
+    .output {
+      background: #f9f9f9; padding: 10px;
+      border-radius: 5px; margin-top: 10px;
+      border: 1px solid #ddd;
+    }
+    .dark-mode .output { background-color: #3a3a3a; border-color: #555; }
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    #imageBox {
+      width: 150px; height: 150px;
+      border: 2px solid #6200ea; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 10px;
+      font-size: 24px; font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌟 AI Explorers</h1>
+  <p>Learn AI in a Fun, Safe, Creative Way!</p>
+  <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+</header>
+
+<nav>
+  <a href="#chatbot">🤖 AI Chat</a>
+  <a href="#story">✍️ Story Maker</a>
+  <a href="#image">🎨 AI Image Maker</a>
+  <a href="#quiz">🧠 AI Quiz</a>
+  <a href="#about">ℹ️ About</a>
+</nav>
+
+<div class="container">
+
+  <!-- Chatbot Section -->
+  <div id="chatbot" class="card">
+    <h2>🤖 SmartChat AI</h2>
+    <p>Talk to this friendly AI helper!</p>
+    <textarea id="userInput" placeholder="Ask me anything about AI..."></textarea>
+    <button onclick="chat()">Chat</button>
+    <button onclick="readOutput()">🔊 Speak</button>
+    <div id="chatOutput" class="output"></div>
+  </div>
+
+  <!-- Story Generator -->
+  <div id="story" class="card">
+    <h2>✍️ AI Story Creator</h2>
+    <p>Type anything, and AI will turn it into a magical story!</p>
+    <input id="storyInput" placeholder="Example: A friendly robot helps save the planet...">
+    <button onclick="generateStory()">Create Story</button>
+    <div id="storyOutput" class="output"></div>
+  </div>
+
+  <!-- Image Maker -->
+  <div id="image" class="card">
+    <h2>🎨 AI Image Maker</h2>
+    <p>Type a word like Sun, Robot, Heart — AI will draw it!</p>
+    <input id="imageInput" placeholder="Draw: sun, robot, star...">
+    <button onclick="makeImage()">Generate Image</button>
+    <div id="imageBox">🎨</div>
+  </div>
+
+  <!-- Quiz Section -->
+  <div id="quiz" class="card">
+    <h2>🧠 AI Safety Quiz</h2>
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div id="quizContainer"></div>
+  </div>
+
+  <!-- About Section -->
+  <div id="about" class="card">
+    <h2>ℹ️ What is AI?</h2>
+    <p>AI helps machines learn like humans. It helps in:</p>
+    <ul>
+      <li>🏥 Hospitals – Doctors use AI to find illnesses early.</li>
+      <li>🚗 Cars – AI helps cars drive safely.</li>
+      <li>📚 Schools – AI helps students learn.</li>
+      <li>🎨 Art – AI can help make drawings and music.</li>
+    </ul>
+    <p>AI should always be used responsibly, safely, and kindly.</p>
+  </div>
+</div>
+
+<script>
+  // Dark Mode
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+  }
+
+  // Chatbot (smart responses)
+  function chat() {
+    const input = document.getElementById("userInput").value.toLowerCase();
+    let response = "";
+
+    if (input.includes("what is ai")) response = "AI means Artificial Intelligence — it helps machines think and learn!";
+    else if (input.includes("hello")) response = "Hello! I'm your friendly AI buddy! 😊";
+    else if (input.includes("science")) response = "AI helps in science by solving big problems faster!";
+    else if (input.includes("danger")) response = "AI can be harmful if misused, so we must use it safely and kindly!";
+    else response = "I don’t know that yet, but I'm learning! 🤖";
+
+    document.getElementById("chatOutput").innerText = response;
+  }
+
+  // Voice Reader
+  function readOutput() {
+    const text = document.getElementById("chatOutput").innerText;
+    speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  }
+
+  // Story Generator
+  function generateStory() {
+    const idea = document.getElementById("storyInput").value;
+    document.getElementById("storyOutput").innerText =
+      `Once upon a time, ${idea}. They used AI to help people, make life easier, and spread kindness. 🌍✨`;
+  }
+
+  // Simple Image Creator
+  function makeImage() {
+    const word = document.getElementById("imageInput").value.toLowerCase();
+    const box = document.getElementById("imageBox");
+    const shapes = { sun: "☀️", star: "⭐", robot: "🤖", heart: "❤️", cat: "🐱", tree: "🌳", }
+    box.innerText = shapes[word] || "🎨";
+  }
+
+  // Quiz
+  function startQuiz() {
+    document.getElementById("quizContainer").innerHTML = `
+      <p><b>Should we share private info like passwords and address with AI?</b></p>
+      <button onclick="quizAnswer(true)">No</button>
+      <button onclick="quizAnswer(false)">Yes</button>
+    `;
+  }
+
+  function quizAnswer(correct) {
+    document.getElementById("quizContainer").innerHTML =
+      correct ? "🎉 Correct! Keep your info safe!" : "⚠️ Not safe! Never share personal info!";
+  }
+</script>
+
+</body>
+</html>
