@@ -1,2 +1,2 @@
-# Kids-ai-helper
-It is designed to help kids use ai for a benefit 
+# Kids-ai-helper 
+designed to help kids fly 
