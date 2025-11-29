@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Explorers — Learn AI the Safe Way!</title>
+  <style>
+    :root{
+      --bg:#f4fbff; --card:#ffffff; --accent:#3aa0ff; --muted:#64748b;
+      --fun1:#ffd77a; --fun2:#ff9aa2; --fun3:#b5e7a0;
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:linear-gradient(180deg,var(--bg),#eaf7ff);
+      color:#0b2545; min-height:100vh;
+    }
+    header{
+      padding:22px; display:flex; gap:18px; align-items:center;
+    }
+    .logo{
+      width:72px; height:72px; border-radius:16px; background:linear-gradient(135deg,var(--fun1),var(--fun2));
+      display:flex; align-items:center; justify-content:center; font-weight:700; font-size:28px; color:#17375a;
+      box-shadow: 0 6px 18px rgba(11,37,69,0.08);
+    }
+    h1{margin:0; font-size:22px}
+    p.lead{margin:6px 0 0; color:var(--muted); font-size:14px}
+    nav{margin-left:auto; display:flex; gap:10px; align-items:center}
+    .btn{
+      background:var(--accent); color:white; border-radius:10px; padding:8px 12px; font-weight:600; text-decoration:none;
+      box-shadow: 0 6px 16px rgba(58,160,255,0.12); border:none; cursor:pointer;
+    }
+    .container{max-width:1100px; margin:18px auto; padding:18px}
+    .grid{display:grid; grid-template-columns: 1fr 380px; gap:18px}
+    .card{background:var(--card); border-radius:12px; padding:14px; box-shadow:0 6px 20px rgba(11,37,69,0.04);}
+    .module{margin-bottom:12px}
+    .small{font-size:13px; color:var(--muted)}
+    .modules-grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:12px}
+    .module-card{background:linear-gradient(135deg,#fff,#f7fdff); border-radius:12px; padding:12px; min-height:120px; display:flex; flex-direction:column; justify-content:space-between}
+    .module-card h3{margin:0; font-size:16px}
+    .kicker{font-weight:700; color:#07a; font-size:12px}
+    footer{margin-top:18px; text-align:center; padding:12px; color:var(--muted); font-size:13px}
+    /* interactive widgets */
+    textarea,input[type="text"]{width:100%; padding:8px; border-radius:8px; border:1px solid #e6eef8; font-size:14px}
+    button.primary{background:linear-gradient(90deg,var(--accent),#1e9cff); color:white; border:none; padding:10px 12px; border-radius:8px; cursor:pointer}
+    .chat{height:260px; overflow:auto; padding:8px; border-radius:10px; background:#f1fbff; border:1px dashed rgba(11,37,69,0.04)}
+    .msg{margin:6px 0; padding:8px; border-radius:8px; max-width:85%}
+    .kid{background:linear-gradient(90deg,#ffe7a0,#fff); align-self:flex-end}
+    .ai{background:linear-gradient(90deg,#e6f9ff,#fff); align-self:flex-start}
+    .flex{display:flex; gap:8px}
+    .center{display:flex; gap:8px; align-items:center}
+    .muted{color:var(--muted); font-size:13px}
+    .quiz-answer{margin:6px 0; padding:10px; border-radius:8px; background:#fff; border:1px solid #e6eef8; cursor:pointer}
+    .quiz-answer.correct{border-color: #3ab54a; box-shadow:0 6px 12px rgba(58,181,74,0.08)}
+    .quiz-answer.wrong{border-color: #ff6b6b}
+    .progress{height:10px; background:#e6f6ff; border-radius:8px; overflow:hidden}
+    .progress > i{display:block; height:100%; background:linear-gradient(90deg,var(--accent),#1e9cff)}
+    @media (max-width:900px){ .grid{grid-template-columns: 1fr} .logo{width:56px;height:56px} nav{display:none} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">AI</div>
+    <div>
+      <h1>AI Explorers</h1>
+      <p class="lead">Fun, safe lessons to help kids learn how AI can help others.</p>
+    </div>
+    <nav>
+      <button class="btn" id="parentBtn">Parent tools</button>
+      <a class="btn" href="#start" title="Start learning">Start</a>
+    </nav>
+  </header>
+
+  <main class="container" id="start" role="main">
+    <div class="grid" role="region" aria-label="Main content">
+      <section>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="kicker">Welcome Explorer</div>
+              <h2 style="margin:6px 0 2px">Learn how AI can help people — safely</h2>
+              <div class="small">Hands-on activities, short lessons, and a quiz — designed for ages 8+.</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Progress</div>
+              <div class="progress" style="width:160px"><i id="progBar" style="width:0%"></i></div>
+              <div class="small" id="progTxt">0% complete</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card module" aria-labelledby="lessonTitle">
+          <h3 id="lessonTitle">What is AI?</h3>
+          <p class="small">Short, friendly explanation for kids:</p>
+          <div style="background:linear-gradient(180deg,#fff,#f6fbff); padding:12px; border-radius:10px">
+            <strong>AI (artificial intelligence)</strong> is like a helpful tool — a program that can learn patterns from examples and help people do things faster or solve problems. It isn't magic; it's math and lots of examples.
+            <ul>
+              <li><strong>Helps:</strong> make stories, check spelling, suggest ideas.</li>
+              <li><strong>Not a person:</strong> it follows rules and examples — sometimes it makes mistakes.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card module">
+          <h3>Interactive sandbox: SafeChat (no internet)</h3>
+          <p class="small">Ask the sandbox AI questions about learning, science, or making kind choices.</p>
+          <div style="display:flex; gap:10px; margin-bottom:8px;">
+            <div style="flex:1">
+              <div class="chat" id="chatBox" aria-live="polite"></div>
+              <div class="center" style="margin-top:8px">
+                <input id="chatInput" type="text" placeholder="Ask me about robots, school projects, or how to help a friend" aria-label="Ask the safe AI">
+                <button class="primary" id="sendBtn">Ask</button>
+              </div>
+            </div>
+            <div style="width:160px">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:6px">Tips</div>
+              <ul class="small">
+                <li>Be kind in your questions.</li>
+                <li>Try: "How can I help a friend?" or "Tell a short science idea."</li>
+                <li>Parents can enable/disable features in Parent tools.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card module">
+          <h3>Make a short story with "MiniWriter"</h3>
+          <p class="small">Type a prompt and the MiniWriter will turn it into a short children's story using local templates.</p>
+          <textarea id="storyPrompt" rows="2" placeholder="e.g., 'A friendly robot learns to garden'"></textarea>
+          <div style="display:flex; gap:8px; margin-top:8px">
+            <button class="primary" id="makeStory">Make story</button>
+            <button id="clearStory">Clear</button>
+          </div>
+          <div id="storyArea" style="margin-top:10px; padding:10px; background:#fff; border-radius:8px; min-height:80px"></div>
+        </div>
+
+        <div class="card module">
+          <h3>AI Image Studio (fun SVG)</h3>
+          <p class="small">Type a few words and the studio will build a playful picture from shapes — no external services.</p>
+          <input id="imgPrompt" type="text" placeholder="e.g., 'sunny beach with a robot'">
+          <div style="display:flex; gap:8px; margin-top:8px">
+            <button class="primary" id="makeImage">Generate image</button>
+            <button id="saveImage">Save PNG</button>
+          </div>
+          <div id="imageCanvas" style="margin-top:10px; border-radius:8px; padding:8px; background:#fff; min-height:140px; display:flex; align-items:center; justify-content:center"></div>
+        </div>
+
+        <div class="card module">
+          <h3>Ethics Mini-Quiz</h3>
+          <p class="small">Choose the best answer — learn safe AI habits.</p>
+          <div id="quizArea"></div>
+          <div id="quizResult" class="small" style="margin-top:8px"></div>
+        </div>
+
+      </section>
+
+      <aside>
+        <div class="card" role="region" aria-label="Quick modules">
+          <h3>Quick modules</h3>
+          <div class="modules-grid" style="margin-top:8px">
+            <div class="module-card">
+              <div>
+                <h3>How AI helps</h3>
+                <p class="small">Medical tools, learning helpers, and accessibility.</p>
+              </div>
+              <div><button class="btn" onclick="showFact('helps')">Learn</button></div>
+            </div>
+
+            <div class="module-card">
+              <div>
+                <h3>Privacy</h3>
+                <p class="small">Keep personal info private — don't share home address or passwords with apps.</p>
+              </div>
+              <div><button class="btn" onclick="showFact('privacy')">Tips</button></div>
+            </div>
+
+            <div class="module-card">
+              <div>
+                <h3>Make a project</h3>
+                <p class="small">Ideas to create with AI responsibly.</p>
+              </div>
+              <div><button class="btn" onclick="showFact('project')">Ideas</button></div>
+            </div>
+
+            <div class="module-card">
+              <div>
+                <h3>Teacher Guide</h3>
+                <p class="small">Short lesson plan & resources for educators.</p>
+              </div>
+              <div><button class="btn" onclick="showFact('teacher')">Open</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Parent / Teacher Tools</h3>
+          <p class="small">Protect kids and check progress.</p>
+          <div style="display:flex; gap:8px; margin-top:8px">
+            <button id="openParent" class="btn">Open tools</button>
+          </div>
+          <div class="small" style="margin-top:10px">
+            Progress and settings are stored only in this browser (localStorage). To reset, clear site data.
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <footer>
+      Built with ♥ for curious kids • Designed to teach safe, helpful uses of AI.
+    </footer>
+  </main>
+
+  <!-- Parent modal -->
+  <div id="parentModal" role="dialog" aria-modal="true" style="display:none; position:fixed; inset:0; background:rgba(6,20,34,0.4); align-items:center; justify-content:center; padding:20px">
+    <div style="background:white; border-radius:12px; max-width:540px; width:100%; padding:18px">
+      <h3>Parent / Teacher Controls</h3>
+      <p class="small">Set a 4-digit PIN to protect advanced features.</p>
+      <div style="display:flex; gap:8px; margin-top:8px">
+        <input id="pinInput" maxlength="4" placeholder="Enter 4-digit PIN" aria-label="Parent PIN">
+        <button class="btn" id="savePin">Save PIN</button>
+        <button id="closeParent">Close</button>
+      </div>
+      <div style="margin-top:12px">
+        <label><input type="checkbox" id="enableSave"> Allow saving progress on this device</label>
+      </div>
+      <div style="margin-top:12px">
+        <button id="resetAll">Reset all progress</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ----- Basic state + progress tracking -----
+    const state = {
+      progress: localStorage.getItem('ai_explorers_progress') ? JSON.parse(localStorage.getItem('ai_explorers_progress')) : {story:0,chat:0,quiz:0,image:0},
+      pin: localStorage.getItem('ai_explorers_pin') || '',
+      saveEnabled: localStorage.getItem('ai_explorers_save') === 'true'
+    };
+
+    function updateProgressBar(){
+      const total = Object.keys(state.progress).length;
+      const sum = Object.values(state.progress).reduce((a,b)=>a+b,0);
+      const pct = Math.round((sum / (total*1)) * 100);
+      document.getElementById('progBar').style.width = pct + '%';
+      document.getElementById('progTxt').textContent = pct + '% complete';
+    }
+    updateProgressBar();
+
+    // ----- SafeChat sandbox (rule-based) -----
+    const chatBox = document.getElementById('chatBox');
+    const chatInput = document.getElementById('chatInput');
+    document.getElementById('sendBtn').addEventListener('click', () => handleChat(chatInput.value));
+    chatInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleChat(chatInput.value); });
+
+    function addMsg(text, cls='ai'){
+      const d = document.createElement('div'); d.className='msg ' + cls; d.textContent = text;
+      d.style.alignSelf = cls === 'kid' ? 'flex-end' : 'flex-start';
+      chatBox.appendChild(d); chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    const canned = {
+      hello: "Hi there! I'm SafeChat — I can help with fun ideas, simple science, and being kind. Try asking me for a story or a science experiment.",
+      helpFriend: "If your friend is sad, ask them kindly what's wrong, listen, and if it's serious tell a trusted adult. Little acts of kindness help a lot.",
+      science: "Here's a simple experiment: make a vinegar + baking soda volcano in a tray. Always do it with an adult and wear safety glasses!",
+      robot: "Robots can follow instructions and learn patterns. Some robots help doctors or explore space."
+    };
+
+    function handleChat(text){
+      if(!text || !text.trim()) return;
+      addMsg(text, 'kid');
+      chatInput.value = '';
+      const t = text.toLowerCase();
+      setTimeout(()=>{
+        let resp = "That's interesting! Can you ask me another question?";
+        if(/\bhello\b|\bhi\b|\bhey\b/.test(t)) resp = canned.hello;
+        else if(/\bhelp\b.*\bfriend\b|\bfriend\b.*\bsad\b/.test(t)) resp = canned.helpFriend;
+        else if(/\bscience\b|\bexperiment\b|\bvolcano\b/.test(t)) resp = canned.science;
+        else if(/\brobot\b|\brobots\b/.test(t)) resp = canned.robot;
+        else if(/\bstory\b|\btell\b.*\bstory\b/.test(t)) resp = "Tell me a short prompt for a story and I'll make one!";
+        addMsg(resp, 'ai');
+        // mark chat done once
+        state.progress.chat = 1; saveIfAllowed();
+        updateProgressBar();
+      }, 600 + Math.random()*700);
+    }
+
+    // add starter message
+    addMsg("Welcome! Ask me something like 'How can I help a friend?' or 'Tell a story about a robot.'", 'ai');
+
+    // ----- MiniWriter (template-based story generator) -----
+    const templates = [
+      (p)=>`Once upon a time, ${p} happened. A curious child and a helpful robot worked together. They learned to be patient, share, and make their town a little happier. The end.`,
+      (p)=>`In a bright, tiny town, ${p}. The friends used creativity and kindness to solve the problem. Everyone cheered when they finished!`,
+      (p)=>`Long ago (or maybe just last Tuesday), ${p}. That day taught them that teamwork and learning new tools can make big differences.`
+    ];
+    document.getElementById('makeStory').addEventListener('click', ()=>{
+      const p = document.getElementById('storyPrompt').value.trim();
+      if(!p){ alert('Type a prompt first — something short like "a robot who plants trees".'); return; }
+      const tpl = templates[Math.floor(Math.random()*templates.length)];
+      const story = tpl(escapeHtml(p));
+      document.getElementById('storyArea').textContent = story;
+      state.progress.story = 1; saveIfAllowed(); updateProgressBar();
+    });
+    document.getElementById('clearStory').addEventListener('click', ()=>{ document.getElementById('storyArea').textContent=''; });
+
+    // ----- Image Studio: create playful SVG from keywords -----
+    function escapeHtml(s){ return s.replaceAll('<','‹').replaceAll('>','›'); }
+    document.getElementById('makeImage').addEventListener('click', ()=>{
+      const p = document.getElementById('imgPrompt').value.toLowerCase();
+      const svg = makeSVGFromPrompt(p);
+      const container = document.getElementById('imageCanvas');
+      container.innerHTML = svg;
+      state.progress.image = 1; saveIfAllowed(); updateProgressBar();
+    });
+
+    function makeSVGFromPrompt(prompt){
+      // Simple mapping of keywords to shapes/colors
+      const has = (k)=>prompt.includes(k);
+      const sky = has('sun') || has('beach') ? '#cbeefd' : '#fff7e6';
+      const colors = ['#ffd77a','#ff9aa2','#b5e7a0','#bfe7ff'];
+      const shapes = [];
+      // background
+      let svg = `<svg viewBox="0 0 400 240" width="100%" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Generated image">`;
+      svg += `<rect width="100%" height="100%" fill="${sky}" rx="12"/>`;
+      // sun
+      if(has('sun')||has('sunny')) svg += `<circle cx="320" cy="40" r="28" fill="#ffd27a"/>`;
+      // waves for beach
+      if(has('beach')||has('sea')||has('ocean')){
+        svg += `<g fill="#a1dbff">`;
+        for(let i=0;i<6;i++){
+          svg += `<ellipse cx="${40+i*60}" cy="${190 - (i%2)*6}" rx="40" ry="12"/>`;
+        }
+        svg += `</g>`;
+      }
+      // robot shape for robot
+      if(has('robot')){
+        svg += `<g transform="translate(120,60)">`;
+        svg += `<rect x="0" y="40" width="80" height="70" rx="10" fill="#dbeeff" stroke="#6ea9ff"/>`;
+        svg += `<rect x="18" y="0" width="44" height="50" rx="8" fill="#fff" stroke="#6ea9ff"/>`;
+        svg += `<circle cx="30" cy="20" r="6" fill="#6ea9ff"/><circle cx="50" cy="20" r="6" fill="#6ea9ff"/>`;
+        svg += `<rect x="28" y="24" width="24" height="6" rx="3" fill="#ffd77a"/>`;
+        svg += `</g>`;
+      }
+      // trees for garden/forest
+      if(has('tree')||has('garden')||has('forest')){
+        for(let i=0;i<3;i++){
+          svg += `<g transform="translate(${20+i*110},140)"><rect x="18" y="20" width="8" height="24" fill="#7a5a2a"/><circle cx="22" cy="12" r="18" fill="#b5e7a0"/></g>`;
+        }
+      }
+      // text overlay (safe)
+      const words = prompt.split(' ').slice(0,4).map(w=>w.replace(/[^a-z]/g,'')).filter(Boolean).join(' ');
+      if(words) svg += `<text x="12" y="230" font-size="12" fill="#274156">"${escapeHtml(words)}"</text>`;
+      svg += `</svg>`;
+      return svg;
+    }
+
+    // Save PNG from SVG
+    document.getElementById('saveImage').addEventListener('click', async ()=>{
+      const container = document.getElementById('imageCanvas');
+      if(!container.firstElementChild){ alert('Generate an image first'); return; }
+      const svgEl = container.querySelector('svg');
+      const svgData = new XMLSerializer().serializeToString(svgEl);
+      const blob = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width; canvas.height = img.height;
+        const ctx = canvas.getContext('2d'); ctx.drawImage(img,0,0);
+        canvas.toBlob((b)=>{ const link = document.createElement('a'); link.download='ai-studio.png'; link.href = URL.createObjectURL(b); link.click(); }, 'image/png');
+      };
+      img.src = url;
+    });
+
+    // ----- Quiz -----
+    const quiz = [
+      {q:"Is it okay to share your home address with an app?", a:["Yes, if it looks fun","Only with a parent","Always"], correct:1},
+      {q:"If an AI gives wrong info, you should:", a:["Believe it always","Check with a teacher or adult","Ignore everything ever"], correct:1},
+      {q:"AI is:", a:["A helpful tool","A human that thinks exactly like you","A magic potion"], correct:0}
+    ];
+    function renderQuiz(){
+      const qa = quiz[Math.floor(Math.random()*quiz.length)];
+      const container = document.getElementById('quizArea'); container.innerHTML = '';
+      const qEl = document.createElement('div'); qEl.innerHTML = `<strong>${escapeHtml(qa.q)}</strong>`; container.appendChild(qEl);
+      qa.a.forEach((ans,i)=>{
+        const btn = document.createElement('div'); btn.className='quiz-answer'; btn.textContent = ans;
+        btn.addEventListener('click', ()=>{
+          if(i===qa.correct){ btn.classList.add('correct'); document.getElementById('quizResult').textContent = 'Good job — correct!'; state.progress.quiz = 1; }
+          else{ btn.classList.add('wrong'); document.getElementById('quizResult').textContent = 'Try again — ask a parent if unsure.'; }
+          saveIfAllowed(); updateProgressBar();
+        });
+        container.appendChild(btn);
+      });
+    }
+    renderQuiz();
+
+    // ----- Parent Controls -----
+    const pm = document.getElementById('parentModal');
+    document.getElementById('openParent').addEventListener('click', ()=>{ pm.style.display='flex'; document.getElementById('pinInput').value = state.pin; document.getElementById('enableSave').checked = state.saveEnabled; });
+    document.getElementById('parentBtn').addEventListener('click', ()=>{ pm.style.display='flex'; });
+    document.getElementById('closeParent').addEventListener('click', ()=>{ pm.style.display='none'; });
+    document.getElementById('savePin').addEventListener('click', ()=>{
+      const v = document.getElementById('pinInput').value.trim();
+      if(v && /^[0-9]{4}$/.test(v)){ state.pin = v; localStorage.setItem('ai_explorers_pin', v); alert('PIN saved'); }
+      else if(v===''){ state.pin=''; localStorage.removeItem('ai_explorers_pin'); alert('PIN cleared'); }
+      else alert('Please use 4 digits or leave empty to clear.');
+    });
+    document.getElementById('enableSave').addEventListener('change', (e)=>{
+      state.saveEnabled = e.target.checked;
+      localStorage.setItem('ai_explorers_save', state.saveEnabled ? 'true' : 'false');
+      if(!state.saveEnabled){ localStorage.removeItem('ai_explorers_progress'); }
+    });
+    document.getElementById('resetAll').addEventListener('click', ()=>{
+      if(confirm('Reset all progress and settings?')){ localStorage.clear(); location.reload(); }
+    });
+
+    // ----- Facts / module buttons -----
+    function showFact(k){
+      let t = '';
+      if(k==='helps') t = 'AI can help doctors find problems faster, help teachers make practice questions, and help people with disabilities by reading text out loud.';
+      if(k==='privacy') t = 'Keep personal details private: don\'t share your full name, address, phone number, passwords, or school name in public apps.';
+      if(k==='project') t = 'Project idea: build a kindness bot that suggests nice actions to do each day. Make rules for it and test with friends.';
+      if(k==='teacher') t = 'Teacher guide: 15 minute intro, 20 minute hands-on MiniWriter and Image Studio, 10 minute quiz + reflection. Encourage discussion on ethics.';
+      alert(t);
+    }
+
+    // ----- Save helper -----
+    function saveIfAllowed(){
+      if(state.saveEnabled){ localStorage.setItem('ai_explorers_progress', JSON.stringify(state.progress)); }
+    }
+
+    // ----- Accessibility small improvements -----
+    // focus outline for keyboard users
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Tab') document.body.style.outline='none'; });
+
+    // ----- Optionally integrate a real AI (notes only) -----
+    /*
+      IMPORTANT: If you later want to call a real AI API (e.g., OpenAI),
+      do NOT put your API key in this file. Instead:
+       1. Create a server endpoint that holds the key and forwards requests.
+       2. The website sends prompts to that server endpoint.
+       3. The server calls the AI provider, returns sanitized responses.
+      Also review privacy rules: avoid sending any child's personal data to 3rd parties.
+    */
+
+  </script>
+</body>
+</html>
